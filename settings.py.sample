@@ -3,4 +3,3 @@
 USERNAME = "youruser" #os.environ.get('GITLAB_REPORTING_USERNAME')
 ACCESS_TOKEN = "<secret>" #os.environ.get('GITLAB_REPORTING_TOKEN')  # https://gitlab.com/profile/personal_access_tokens
 BASE_URL = "https://gitlab.com/api/v4"
-
