@@ -11,8 +11,8 @@ except:
 
 # Borrowed from https://stackoverflow.com/a/56787591
 
-updated_after = "2020-01-01T00:00:00.00Z"
-updated_before = "2020-03-01T00:00:00.00Z"
+updated_after = "2020-01-10T00:00:00.00Z"
+updated_before = "2020-12-01T00:00:00.00Z"
 
 def get_project_hours(project_id, _from, _to):
     item_counter = 0
@@ -20,7 +20,7 @@ def get_project_hours(project_id, _from, _to):
     
     headers = { 'Private-Token': ACCESS_TOKEN }
     url_template = "{base_url}/projects/{project_id}/issues?" \
-                   "&updated_after={updated_after}&updated_before={updated_before}"
+                   "&updated_after={updated_after}&updated_before={updated_before}&per_page=100"
     url = url_template.format(base_url=BASE_URL, project_id=project_id, username=USERNAME,
                               updated_after=updated_after, updated_before=updated_before)
     
@@ -33,11 +33,10 @@ def get_project_hours(project_id, _from, _to):
     print("Issue statistics for {u} from {f} to {t}:\n".format(u=USERNAME,f=updated_after, t=updated_before))
     
     for issue in issues.json():
-    
         time_val = issue['time_stats']['human_total_time_spent']
         already_paid = u'paid' in issue['labels'] # you can put a label 'paid' to exclude an issue
         if already_paid:
-            time_val = time_val + " *"
+            time_val = time_val + " (paid)"
         else:
             # if the issue has been paid, already, don't add the time, and don't list as to be paid
             total_seconds += issue['time_stats']['total_time_spent']
@@ -62,7 +61,7 @@ if __name__ == '__main__':
     total_hours = 0
     for project_id in sys.argv[1:]:
         print("\n...")
-        print("*** Stats for project: project_id".format(project_id))
+        print("*** Stats for project: {project_id}".format(project_id=project_id))
         total_hours += get_project_hours(project_id, updated_after, updated_before)
 
     print("")
